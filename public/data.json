@@ -1,8 +1,8 @@
 {
   "viewState": {
-    "latitude": 48.457518769136485,
-    "longitude": -123.40784847252989,
-    "zoom": 17.014633278264917,
+    "latitude": 48.48902324259202,
+    "longitude": -123.3732177123382,
+    "zoom": 8.46570505908272,
     "pitch": 0,
     "bearing": 0,
     "maxZoom": 20,
@@ -15,75 +15,89 @@
     "transitionDuration": 0
   },
   "solid": [
-    {
-      "hex": "8b28d1a1ad74fff",
-      "count": 1.993562262564005,
-      "colorIndex": 3,
-      "type": "Photos",
-      "label": "Highrock Cairn Park"
-    },
-    {
-      "hex": "8c28d1a0e9b27ff",
-      "count": 1.446159084497559,
-      "colorIndex": 3,
-      "type": "Photos",
-      "label": "Albert Head Lagoon"
-    },
-    {
-      "hex": "8c28d1af404b9ff",
-      "count": 1.446159084497559,
-      "colorIndex": 1,
-      "type": "Photos",
-      "label": "Portage Inlet Park"
-    },
-    {
-      "hex": "8c28d1a1b5453ff",
-      "count": 1.446159084497559,
-      "colorIndex": 0,
-      "type": "Photos",
-      "label": "Portage Park"
-    },
-    {
-      "hex": "8d28d1aaac56a3f",
-      "count": 0.963468653442753,
-      "colorIndex": 2,
-      "type": "Photos",
-      "label": "Mount Tolmie"
-    },
-    {
-      "hex": "8e28d1aad3b2a2f",
-      "count": 0.5336880111120408,
-      "colorIndex": 0,
-      "type": "Photos",
-      "label": "Banfield Park"
-    },
-    {
-      "hex": "8d28d1a1b59ad7f",
-      "count": 0.963468653442753,
-      "colorIndex": 1,
-      "type": "Photos",
-      "label": "Craigflower Manor"
-    },
-    {
-      "hex": "8d28d1af464407f",
+		{
+      "hex": "8d28d1aacba46bf",
       "count": 0.963468653442753,
       "colorIndex": 0,
-      "type": "Photos",
-      "label": "Knockan Hill Park"
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Central Branch"
     },
-    {
-      "hex": "8d28d1a1a59233f",
+		{
+      "hex": "8d28d1af2629a3f",
       "count": 0.963468653442753,
       "colorIndex": 0,
-      "type": "Photos",
-      "label": "Saanich Gorge Park"
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Bruce Hutchison"
     },
-    {
-      "hex": "8d28d1a13dae8bf",
+		{
+  		"hex": "8d28d1ad860a43f",
       "count": 0.963468653442753,
-      "colorIndex": 1,
-      "type": "Photos",
-      "label": "Dallas Road"
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Central Saanich Branch"
+    },
+		{
+      "hex": "8d28d1aa951b83f",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Emily Carr"
+    },
+		{
+      "hex": "8d28d1a1e29353f",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Esquimalt"
+    },
+		{
+      "hex": "8d28d1ae4390aff",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Goudy"
+    },
+		{
+      "hex": "8d28d1a196ce0ff",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Juan de Fuca"
+    },
+		{
+      "hex": "8d28d1ae5b1593f",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Langford Heritage"
+    },
+		{
+      "hex": "8d28d1aaa29babf",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Nellie McClung"
+    },
+		{
+      "hex": "8d28d1aa14f2cbf",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Oak Bay"
+    },
+		{
+      "hex": "8d28d1aa9ae0a3f",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - Saanich Centennial"
+    },
+		{
+      "hex": "8d28d1a1342ad7f",
+      "count": 0.963468653442753,
+      "colorIndex": 0,
+      "type": "Web Archive:Library",
+      "label": "Greater Victoria Public Library - sxʷeŋxʷəŋ təŋəxʷ James Bay"
     }
   ],
   "clear": [],
