@@ -20,7 +20,7 @@ export default function listenersReducer (listeners, action) {
   }
 
   function startListening (peerId) {
-    const peerIdStr = peerId.toB58String()
+    const peerIdStr = peerId.string
     const nextListeners = produce(listeners, draftListeners => {
       draftListeners[peerIdStr] = {
         peerId,
@@ -32,7 +32,7 @@ export default function listenersReducer (listeners, action) {
   }
 
   function addLibp2pNode (peerId, libp2pNode) {
-    const peerIdStr = peerId.toB58String()
+    const peerIdStr = peerId.string
     const nextListeners = produce(listeners, draftListeners => {
       draftListeners[peerIdStr].libp2pNode = libp2pNode
     })
@@ -40,7 +40,7 @@ export default function listenersReducer (listeners, action) {
   }
 
   function log (peerId, txt) {
-    const peerIdStr = peerId.toB58String()
+    const peerIdStr = peerId.string
     const nextListeners = produce(listeners, draftListeners => {
       const nextLogs = produce(draftListeners[peerIdStr].logs, draftLogs => {
         draftLogs.push(txt)
@@ -51,10 +51,10 @@ export default function listenersReducer (listeners, action) {
   }
 
   function addPeer (peerId, peerInfo) {
-    const peerIdStr = peerId.toB58String()
+    const peerIdStr = peerId.string
     const nextListeners = produce(listeners, draftListeners => {
       const nextPeers = produce(draftListeners[peerIdStr].peers, draftPeers => {
-        const peerIdRemote = peerInfo.id.toB58String()
+        const peerIdRemote = peerInfo.id
         if (!draftPeers[peerIdRemote]) {
           draftPeers[peerIdRemote] = {
             peerInfo: peerInfo,
@@ -68,11 +68,11 @@ export default function listenersReducer (listeners, action) {
   }
 
   function updatePeer (peerId, peerInfo, updatePeerFunc) {
-    const peerIdStr = peerId.toB58String()
+    const peerIdStr = peerId.string
     let nextListeners = addPeer(peerId, peerInfo)
     nextListeners = produce(nextListeners, draftListeners => {
       const nextPeers = produce(draftListeners[peerIdStr].peers, draftPeers => {
-        const peerIdRemote = peerInfo.id.toB58String()
+        const peerIdRemote = peerInfo.id
         const peer = draftPeers[peerIdRemote]
         updatePeerFunc(peer)
       })

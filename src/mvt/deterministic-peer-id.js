@@ -1,6 +1,6 @@
 import sodium from 'sodium-universal'
-import PeerId from 'peer-id'
-import libp2pCrypto from 'libp2p-crypto'
+import { createFromPrivKey } from '@libp2p/peer-id-factory'
+import { marshalPrivateKey, supportedKeys } from '@libp2p/crypto/keys'
 import { Buffer } from 'buffer'
 
 // https://libsodium.gitbook.io/doc/key_derivation
@@ -17,14 +17,21 @@ export default async function getPeerIdFromH3HexAndSecret (h3Hex, secretHex) {
   sodium.crypto_sign_seed_keypair(publicKey, secretKey, subKey1)
   if (subKey1.fill) subKey1.fill(0)
 
-  const privKey = libp2pCrypto.keys.marshalPrivateKey(
-    new libp2pCrypto.keys.supportedKeys.ed25519.Ed25519PrivateKey(
+  // const privKey = marshalPrivateKey(
+  const privKey = new supportedKeys.ed25519.Ed25519PrivateKey(
       secretKey,
       publicKey
-    ),
+    )
+
+  /*
     'ed25519'
   )
-  const peerId = await PeerId.createFromPrivKey(privKey)
+  */
+  console.log('Jim1 privKey', privKey)
+
+  // const peerId = await PeerId.createFromPrivKey(privKey)
+  const peerId = await createFromPrivKey(privKey)
+  console.log('Jim1 peerId', peerId, privKey)
 
   return peerId
 }

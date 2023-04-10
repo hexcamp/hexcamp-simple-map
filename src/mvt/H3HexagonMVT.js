@@ -185,7 +185,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
                   </a>
                 </div>
                 <div style={{ fontSize: 'small' }}>
-                  PeerID: {peerId && peerId.toB58String()}
+                  PeerID: {`${peerId}`}
                 </div>
                 <div>
                   <button
