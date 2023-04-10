@@ -1,7 +1,7 @@
 import produce from 'immer'
 
 export default function listenersReducer (listeners, action) {
-  const { type, peerId, libp2pNode, peerInfo } = action
+  const { type, peerId, libp2pNode, remotePeerId } = action
   switch (type) {
     case 'startListening':
       return startListening(peerId)
@@ -11,10 +11,10 @@ export default function listenersReducer (listeners, action) {
       const { payload } = action
       return log(peerId, payload)
     case 'addPeer':
-      return addPeer(peerId, peerInfo)
+      return addPeer(peerId, remotePeerId)
     case 'updatePeer':
       const { updatePeerFunc } = action
-      return updatePeer(peerId, peerInfo, updatePeerFunc)
+      return updatePeer(peerId, remotePeerId, updatePeerFunc)
     default:
       throw new Error()
   }
@@ -50,33 +50,30 @@ export default function listenersReducer (listeners, action) {
     return nextListeners
   }
 
-  function addPeer (peerId, peerInfo) {
-    const peerIdStr = peerId.string
+  function addPeer (peerId, remotePeerId) {
+    console.log('Jim addPeer', peerId.string, remotePeerId.string)
     const nextListeners = produce(listeners, draftListeners => {
-      const nextPeers = produce(draftListeners[peerIdStr].peers, draftPeers => {
-        const peerIdRemote = peerInfo.id
-        if (!draftPeers[peerIdRemote]) {
-          draftPeers[peerIdRemote] = {
-            peerInfo: peerInfo,
+      const nextPeers = produce(draftListeners[peerId.string].peers, draftPeers => {
+        if (!draftPeers[remotePeerId.string]) {
+          draftPeers[remotePeerId.string] = {
             connected: false
           }
         }
       })
-      draftListeners[peerIdStr].peers = nextPeers
+      draftListeners[peerId.string].peers = nextPeers
     })
     return nextListeners
   }
 
-  function updatePeer (peerId, peerInfo, updatePeerFunc) {
-    const peerIdStr = peerId.string
-    let nextListeners = addPeer(peerId, peerInfo)
+  function updatePeer (peerId, remotePeerId, updatePeerFunc) {
+    console.log('Jim updatePeer', peerId.string, remotePeerId.string)
+    let nextListeners = addPeer(peerId, remotePeerId)
     nextListeners = produce(nextListeners, draftListeners => {
-      const nextPeers = produce(draftListeners[peerIdStr].peers, draftPeers => {
-        const peerIdRemote = peerInfo.id
-        const peer = draftPeers[peerIdRemote]
+      const nextPeers = produce(draftListeners[peerId.string].peers, draftPeers => {
+        const peer = draftPeers[remotePeerId.string]
         updatePeerFunc(peer)
       })
-      draftListeners[peerIdStr].peers = nextPeers
+      draftListeners[peerId.string].peers = nextPeers
     })
     return nextListeners
   }
