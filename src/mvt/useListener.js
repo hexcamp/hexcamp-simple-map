@@ -6,7 +6,8 @@ import { mplex } from '@libp2p/mplex'
 export default function useListener (
   peerId,
   listeners,
-  dispatchListenersAction
+  dispatchListenersAction,
+  neighbours
 ) {
   const peerIdStr = peerId.string
   const listener = listeners[peerIdStr]
@@ -14,7 +15,7 @@ export default function useListener (
 
   function create () {
     dispatchListenersAction({ type: 'startListening', peerId })
-    createListener(peerId, dispatchListenersAction, log)
+    createListener(peerId, dispatchListenersAction, log, neighbours)
   }
 
   function log (txt) {
@@ -27,7 +28,7 @@ export default function useListener (
   }
 }
 
-async function createListener (peerId, dispatchListenersAction, log) {
+async function createListener (peerId, dispatchListenersAction, log, neighbours) {
   const star = webRTCStar()
   const node = await createLibp2p({
     peerId,
@@ -37,7 +38,22 @@ async function createListener (peerId, dispatchListenersAction, log) {
     transports: [star.transport],
     connectionEncryption: [noise()],
     streamMuxers: [mplex()],
-    peerDiscovery: [star.discovery]
+    peerDiscovery: [star.discovery],
+    connectionGater: {
+      denyDialPeer: async incomingPeerId => {
+        console.log(
+          'Jim denyDialPeer',
+          peerId.string,
+          'Incoming',
+          incomingPeerId.string,
+        )
+        const neighbourHexes = await neighbours
+        console.log('Neighbours', neighbourHexes)
+        const isNeighbour = neighbourHexes.has(incomingPeerId.string)
+        console.log('Is neighbour?', isNeighbour)
+        return !isNeighbour
+      }
+    }
   })
 
   node.addEventListener('peer:discovery', evt => {

@@ -191,6 +191,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
                 </div>
                 {peerId && (
                   <WebRTCPanel
+                    hex={selectedHex[1]}
                     peerId={peerId}
                     listeners={listeners}
                     dispatchListenersAction={dispatchListenersAction}
