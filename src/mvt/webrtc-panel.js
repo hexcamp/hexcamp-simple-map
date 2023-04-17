@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import useListener from './useListener'
 import { kRing } from 'h3-js'
 import getPeerIdFromH3Hex from './deterministic-peer-id'
+import hexToUrl from './hex-to-url'
 
 export default function WebRTCPanel ({
   hex,
@@ -9,18 +10,24 @@ export default function WebRTCPanel ({
   listeners,
   dispatchListenersAction
 }) {
-  const neighbours = useMemo(async () => {
-    const hexes = kRing(hex, 1)
-    const promises = []
-    for (const neighbour of hexes) {
-      if (neighbour === hex) continue
-      promises.push(getPeerIdFromH3Hex(neighbour))
-    }
-    const peerIds = await Promise.all(promises)
-    return new Set(peerIds.map(peerId => peerId.toString()))
-  }, [hex])
+  const [neighbours, setNeighbours] = useState(new Map())
+  useEffect(() => {
+    (async () => {
+      const hexes = kRing(hex, 1)
+      const promises = []
+      for (const neighbour of hexes) {
+        if (neighbour === hex) continue
+        promises.push(async function() {
+          const peerId = await getPeerIdFromH3Hex(neighbour)
+          return [peerId.toString(), neighbour]
+        }())
+      }
+      const peerIdToHex = await Promise.all(promises)
+      setNeighbours(new Map(peerIdToHex))
+    })()
+  }, [hex, setNeighbours])
 
-  const [listener, create, log, dial] = useListener(
+  const [listener, create] = useListener(
     peerId,
     listeners,
     dispatchListenersAction,
@@ -40,22 +47,17 @@ export default function WebRTCPanel ({
   return (
     <div>
       <h3>Peers</h3>
-      Hex: ${hex}
       <ul>
         {Object.keys(peers).map(remotePeerId => {
           const peer = peers[remotePeerId]
           return (
-            <li key={remotePeerId}>
-              {remotePeerId.slice(-3)}{' '}
-              {peer.connected ? 'Connected' : 'Disconnected'}
-              {!peer.connected && <button onClick={connect}>Connect</button>}
+            peer.connected && <li key={remotePeerId}>
+              {hexToUrl(neighbours.get(remotePeerId))}
+              &nbsp;
+              &nbsp;
+              ({remotePeerId.slice(-3)})
             </li>
           )
-          function connect () {
-            log(`Dialing ${remotePeerId}`)
-            dial(remotePeerId)
-            log(`Dialed ${remotePeerId}`)
-          }
         })}
       </ul>
       <h3>Logs</h3>
