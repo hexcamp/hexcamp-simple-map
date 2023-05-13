@@ -10,10 +10,13 @@ import ResolutionSelect from './resolution-select'
 import LocationPicker from './location-picker'
 import getPeerIdFromH3Hex from './deterministic-peer-id'
 import WebRTCPanel from './webrtc-panel'
+import cellsReducer from './cells-reducer'
 import listenersReducer from './listeners-reducer'
 
 export default function H3HexagonMVT ({ homeLinkCounter }) {
   const [resolution, setResolution] = useState(7)
+
+  const [cells, dispatchCellsAction] = useReducer(cellsReducer, {})
 
   const [dataSolid, setDataSolid] = useState([])
   const [dataIndex, setDataIndex] = useState(new Map())
@@ -76,6 +79,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
     async function fetchData () {
       const response = await fetch(process.env.PUBLIC_URL + '/data.json')
       const data = await response.json()
+      dispatchCellsAction({ type: 'initData', data: data.solid })
       setDataSolid(data.solid)
       setViewState(data.viewState)
       updateDataIndex(data.solid)
@@ -105,9 +109,11 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
       label: 'Unlabeled'
     }
     setNextColor(colorIndex + 1)
+    dispatchCellsAction({ type: 'addCell', cell: newDataPoint })
     const nextData = produce(dataSolid, draft => {
       draft.push(newDataPoint)
     })
+
     setDataSolid(nextData)
     updateDataIndex(nextData)
   }
@@ -145,6 +151,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
         ...draft.filter(({ hex }) => hex !== hexToRemove)
       )
     })
+    dispatchCellsAction({ type: 'removeCell', hex: hexToRemove })
     setDataSolid(nextData)
     updateDataIndex(nextData)
   }
@@ -233,6 +240,12 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
                   null,
                   2
                 )}
+              </pre>
+            </details>
+            <h3>Cells</h3>
+            <details>
+              <pre>
+                {JSON.stringify(cells, null, 2)}
               </pre>
             </details>
           </div>
