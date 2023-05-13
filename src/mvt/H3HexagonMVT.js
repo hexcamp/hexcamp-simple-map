@@ -14,6 +14,7 @@ import listenersReducer from './listeners-reducer'
 
 export default function H3HexagonMVT ({ homeLinkCounter }) {
   const [resolution, setResolution] = useState(7)
+
   const [dataSolid, setDataSolid] = useState([])
   const [dataIndex, setDataIndex] = useState(new Map())
   const [nextColor, setNextColor] = useState(0)
@@ -111,6 +112,27 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
     updateDataIndex(nextData)
   }
 
+  function addHex (hex) {
+    const colorIndex = nextColor % 10
+    const newDataPoint = {
+      hex,
+      // count: 30 * (9.682 - Math.log((resolution + 1) * 1000)),
+      count:
+        1000 * (1 / Math.log((resolution + 2) * (resolution + 2)) / 10) - 17.5,
+      colorIndex,
+      type: 'No type',
+      label: 'Unlabeled'
+    }
+    setNextColor(colorIndex + 1)
+    console.log('Jim addHex before', dataSolid)
+    const nextData = produce(dataSolid, draft => {
+      draft.push(newDataPoint)
+    })
+    console.log('Jim addHex after', nextData)
+    setDataSolid(nextData)
+    updateDataIndex(nextData)
+  }
+
   function pickHex (layer, hex) {
     setSelectedHex([layer, hex])
   }
@@ -163,8 +185,8 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
             <h3>Selected</h3>
             {selectedHex && (
               <>
-                <div>Type: {dataIndex.get(selectedHex[1]).type}</div>
-                <div>Label: {dataIndex.get(selectedHex[1]).label}</div>
+                <div>Type: {dataIndex.get(selectedHex[1])?.type}</div>
+                <div>Label: {dataIndex.get(selectedHex[1])?.label}</div>
                 <div>
                   Hex: {selectedHex[1]} {selectedHex[0]}
                 </div>
@@ -195,6 +217,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
                     peerId={peerId}
                     listeners={listeners}
                     dispatchListenersAction={dispatchListenersAction}
+                    addHex={addHex}
                   />
                 )}
               </>

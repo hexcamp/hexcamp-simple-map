@@ -7,7 +7,8 @@ export default function useListener (
   peerId,
   listeners,
   dispatchListenersAction,
-  neighbours
+  neighbours,
+  addHex
 ) {
   const peerIdStr = peerId.string
   const listener = listeners[peerIdStr]
@@ -15,7 +16,7 @@ export default function useListener (
 
   function create () {
     dispatchListenersAction({ type: 'startListening', peerId })
-    createListener(peerId, dispatchListenersAction, log, neighbours)
+    createListener(peerId, dispatchListenersAction, log, neighbours, addHex)
   }
 
   function log (txt) {
@@ -28,7 +29,7 @@ export default function useListener (
   }
 }
 
-async function createListener (peerId, dispatchListenersAction, log, neighbours) {
+async function createListener (peerId, dispatchListenersAction, log, neighbours, addHex) {
   const star = webRTCStar()
   const node = await createLibp2p({
     peerId,
@@ -71,6 +72,11 @@ async function createListener (peerId, dispatchListenersAction, log, neighbours)
     if (remotePeerId?.string) {
       log(`Connected to ${remotePeerId.string}`)
       console.log('Jim peer:connect', peerId.string, remotePeerId.string)
+      const neighbour = neighbours.get(remotePeerId.string)
+      if (neighbour) {
+        console.log('Jim addHex', neighbour)
+        addHex(neighbour)
+      }
       dispatchListenersAction({
         type: 'updatePeer',
         peerId,
