@@ -1,26 +1,51 @@
 import produce from 'immer'
+import { h3GetResolution } from 'h3-js'
 
 export default function cellsReducer (cells, action) {
   const { type, data, cell, hex } = action
   switch (type) {
     case 'initData':
-      return { data }
+      return {
+        data,
+        nextColor: 0
+      }
     case 'addCell':
       return addCell(cell)
-    case 'removeCell':
-      return removeCell(hex)
+    case 'addHex':
+      return addHex(hex)
+    case 'removeHex':
+      return removeHex(hex)
     default:
       throw new Error()
   }
 
-  function addCell (cell) {
+  function addCell (newCell) {
     const nextCells = produce(cells, draftCells => {
-      draftCells.data.push(cell)
+      draftCells.data.push(newCell)
     })
     return nextCells
   }
 
-  function removeCell (hexToRemove) {
+  function addHex (hex) {
+    const colorIndex = cells.nextColor % 10
+    const resolution = h3GetResolution(hex)
+    const newCell = {
+      hex,
+      // count: 30 * (9.682 - Math.log((resolution + 1) * 1000)),
+      count:
+        1000 * (1 / Math.log((resolution + 2) * (resolution + 2)) / 10) - 17.5,
+      colorIndex,
+      type: 'No type',
+      label: 'Unlabeled'
+    }
+    const nextCells = produce(cells, draftCells => {
+      draftCells.data.push(newCell)
+      draftCells.nextColor++
+    })
+    return nextCells
+  }
+
+  function removeHex (hexToRemove) {
     const nextCells = produce(cells, draftCells => {
       draftCells.data = draftCells.data.filter(({ hex }) => hex !== hexToRemove)
     })

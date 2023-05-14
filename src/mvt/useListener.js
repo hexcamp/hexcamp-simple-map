@@ -6,8 +6,9 @@ import { mplex } from '@libp2p/mplex'
 export default function useListener (
   peerId,
   listeners,
-  dispatchListenersAction,
   neighbours,
+  dispatchListenersAction,
+  dispatchCellsAction,
   addHex
 ) {
   const peerIdStr = peerId.string
@@ -16,7 +17,14 @@ export default function useListener (
 
   function create () {
     dispatchListenersAction({ type: 'startListening', peerId })
-    createListener(peerId, dispatchListenersAction, log, neighbours, addHex)
+    createListener(
+      peerId,
+      dispatchListenersAction,
+      dispatchCellsAction,
+      log,
+      neighbours,
+      addHex
+    )
   }
 
   function log (txt) {
@@ -29,7 +37,14 @@ export default function useListener (
   }
 }
 
-async function createListener (peerId, dispatchListenersAction, log, neighbours, addHex) {
+async function createListener (
+  peerId,
+  dispatchListenersAction,
+  dispatchCellsAction,
+  log,
+  neighbours,
+  addHex
+) {
   const star = webRTCStar()
   const node = await createLibp2p({
     peerId,
@@ -46,7 +61,7 @@ async function createListener (peerId, dispatchListenersAction, log, neighbours,
           'Jim denyDialPeer',
           peerId.string,
           'Incoming',
-          incomingPeerId.string,
+          incomingPeerId.string
         )
         const neighbourHexes = await neighbours
         console.log('Neighbours', neighbourHexes)
@@ -76,6 +91,7 @@ async function createListener (peerId, dispatchListenersAction, log, neighbours,
       if (neighbour) {
         console.log('Jim addHex', neighbour)
         addHex(neighbour)
+        dispatchCellsAction({ type: 'addHex', hex: neighbour })
       }
       dispatchListenersAction({
         type: 'updatePeer',

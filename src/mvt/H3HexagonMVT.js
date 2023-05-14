@@ -151,7 +151,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
         ...draft.filter(({ hex }) => hex !== hexToRemove)
       )
     })
-    dispatchCellsAction({ type: 'removeCell', hex: hexToRemove })
+    dispatchCellsAction({ type: 'removeHex', hex: hexToRemove })
     setDataSolid(nextData)
     updateDataIndex(nextData)
   }
@@ -224,6 +224,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
                     peerId={peerId}
                     listeners={listeners}
                     dispatchListenersAction={dispatchListenersAction}
+                    dispatchCellsAction={dispatchCellsAction}
                     addHex={addHex}
                   />
                 )}

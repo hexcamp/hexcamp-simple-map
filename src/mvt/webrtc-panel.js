@@ -9,6 +9,7 @@ export default function WebRTCPanel ({
   peerId,
   listeners,
   dispatchListenersAction,
+  dispatchCellsAction,
   addHex
 }) {
   const [neighbours, setNeighbours] = useState(new Map())
@@ -31,8 +32,9 @@ export default function WebRTCPanel ({
   const [listener, create] = useListener(
     peerId,
     listeners,
-    dispatchListenersAction,
     neighbours,
+    dispatchListenersAction,
+    dispatchCellsAction,
     addHex
   )
 
