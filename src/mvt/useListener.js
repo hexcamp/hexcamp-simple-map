@@ -49,7 +49,9 @@ async function createListener (
   const node = await createLibp2p({
     peerId,
     addresses: {
-      listen: ['/ip4/127.0.0.1/tcp/9090/wss/p2p-webrtc-star']
+      // listen: ['/ip4/127.0.0.1/tcp/9090/wss/p2p-webrtc-star']
+      // listen: ['/ip4/192.168.1.80/tcp/9090/wss/p2p-webrtc-star']
+      listen: ['/dns4/hexcamp-webrtc-star-dev.quick.cluster-4.localnet.farm/tcp/443/wss/p2p-webrtc-star']
     },
     transports: [star.transport],
     connectionEncryption: [noise()],
