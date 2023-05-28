@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react'
 import { FlyToInterpolator } from '@deck.gl/core'
 import { geoToH3 } from 'h3-js'
-import produce from 'immer'
 import { useLocation } from 'react-router-dom'
 import hexToUrl from './hex-to-url'
 import locations from './locations'
@@ -18,8 +17,6 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
 
   const [cells, dispatchCellsAction] = useReducer(cellsReducer, {})
 
-  const [dataSolid, setDataSolid] = useState([])
-  const [dataIndex, setDataIndex] = useState(new Map())
   const [nextColor, setNextColor] = useState(0)
   const location = useLocation()
   const [initialViewState, setInitialViewState] = useState({
@@ -80,23 +77,13 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
       const response = await fetch(process.env.PUBLIC_URL + '/data.json')
       const data = await response.json()
       dispatchCellsAction({ type: 'initData', data: data.solid })
-      setDataSolid(data.solid)
       setViewState(data.viewState)
-      updateDataIndex(data.solid)
     }
     fetchData()
-  }, [setDataSolid, setViewState])
-
-  function updateDataIndex (data) {
-    const dataIndex = new Map()
-    for (const d of data) {
-      dataIndex.set(d.hex, d)
-    }
-    setDataIndex(dataIndex)
-  }
+  }, [setViewState])
 
   function pushLatLng (lat, lng) {
-    if (location.pathname !== '/edit') return
+    if (location.pathname !== '/') return
     const hex = geoToH3(lat, lng, resolution)
     const colorIndex = nextColor % 10
     const newDataPoint = {
@@ -110,33 +97,6 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
     }
     setNextColor(colorIndex + 1)
     dispatchCellsAction({ type: 'addCell', cell: newDataPoint })
-    const nextData = produce(dataSolid, draft => {
-      draft.push(newDataPoint)
-    })
-
-    setDataSolid(nextData)
-    updateDataIndex(nextData)
-  }
-
-  function addHex (hex) {
-    const colorIndex = nextColor % 10
-    const newDataPoint = {
-      hex,
-      // count: 30 * (9.682 - Math.log((resolution + 1) * 1000)),
-      count:
-        1000 * (1 / Math.log((resolution + 2) * (resolution + 2)) / 10) - 17.5,
-      colorIndex,
-      type: 'No type',
-      label: 'Unlabeled'
-    }
-    setNextColor(colorIndex + 1)
-    console.log('Jim addHex before', dataSolid)
-    const nextData = produce(dataSolid, draft => {
-      draft.push(newDataPoint)
-    })
-    console.log('Jim addHex after', nextData)
-    setDataSolid(nextData)
-    updateDataIndex(nextData)
   }
 
   function pickHex (layer, hex) {
@@ -144,21 +104,12 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
   }
 
   function removeHex (layer, hexToRemove) {
-    const nextData = produce(dataSolid, draft => {
-      draft.splice(
-        0,
-        draft.length,
-        ...draft.filter(({ hex }) => hex !== hexToRemove)
-      )
-    })
     dispatchCellsAction({ type: 'removeHex', hex: hexToRemove })
-    setDataSolid(nextData)
-    updateDataIndex(nextData)
   }
 
   return (
     <div>
-      {location.pathname === '/edit' && (
+      {location.pathname === '/' && (
         <div style={{ display: 'flex' }}>
           <ResolutionSelect
             resolution={resolution}
@@ -177,7 +128,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
           }}
         >
           <H3HexagonView
-            dataSolid={dataSolid}
+            cells={cells}
             initialViewState={initialViewState}
             setInitialViewState={setInitialViewState}
             pushLatLng={pushLatLng}
@@ -187,13 +138,14 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
             setSelectedHex={setSelectedHex}
           />
         </div>
-        {location.pathname === '/edit' && (
+        {location.pathname === '/' && (
           <div style={{ width: '100%' }}>
             <h3>Selected</h3>
             {selectedHex && (
               <>
-                <div>Type: {dataIndex.get(selectedHex[1])?.type}</div>
-                <div>Label: {dataIndex.get(selectedHex[1])?.label}</div>
+                <div>Remote?: {cells.index[selectedHex[1]]?.remote ? 'True' : 'False'}</div>
+                <div>Type: {cells.index[selectedHex[1]]?.type}</div>
+                <div>Label: {cells.index[selectedHex[1]]?.label}</div>
                 <div>
                   Hex: {selectedHex[1]} {selectedHex[0]}
                 </div>
@@ -225,22 +177,14 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
                     listeners={listeners}
                     dispatchListenersAction={dispatchListenersAction}
                     dispatchCellsAction={dispatchCellsAction}
-                    addHex={addHex}
                   />
                 )}
               </>
             )}
-            <h3>Data</h3>
+            <h3>View State</h3>
             <details>
               <pre>
-                {JSON.stringify(
-                  {
-                    viewState,
-                    solid: dataSolid
-                  },
-                  null,
-                  2
-                )}
+                {JSON.stringify(viewState, null, 2)}
               </pre>
             </details>
             <h3>Cells</h3>
@@ -256,9 +200,9 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
         <div style={{ padding: '0.5rem' }}>
           {selectedHex ? (
             <>
-              {dataIndex.get(selectedHex[1]).type}:
+              {cells.index[selectedHex[1]].type}:
               <a href={`https://${selectedHexBase32}.hex.camp`}>
-                {dataIndex.get(selectedHex[1]).label}
+                {cells.index[selectedHex[1]].label}
               </a>
             </>
           ) : (

@@ -106,14 +106,14 @@ export default class H3HexagonView extends Component {
   }
 
   _renderLayers () {
-    const { dataSolid, pickHex, selectedHex } = this.props
+    const { cells, pickHex, selectedHex } = this.props
     const {
       viewState: { zoom }
     } = this.state
 
     const iconClusterLayer = new IconClusterLayer({
       id: 'icon-cluster',
-      data: dataSolid,
+      data: cells.data,
       getPosition: d => {
         const latLng = h3ToGeo(d.hex)
         return [latLng[1], latLng[0]]
@@ -199,7 +199,7 @@ export default class H3HexagonView extends Component {
 
     const hexLayer = new H3HexagonLayer({
       id: 'h3-hexagon-layer-solid',
-      data: dataSolid,
+      data: cells.data,
       pickable: true,
       autoHighlight: true,
       highlightColor: [255, 255, 255, 100],

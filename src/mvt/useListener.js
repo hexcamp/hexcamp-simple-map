@@ -42,8 +42,7 @@ async function createListener (
   dispatchListenersAction,
   dispatchCellsAction,
   log,
-  neighbours,
-  addHex
+  neighbours
 ) {
   const star = webRTCStar()
   const node = await createLibp2p({
@@ -91,9 +90,9 @@ async function createListener (
       console.log('Jim peer:connect', peerId.string, remotePeerId.string)
       const neighbour = neighbours.get(remotePeerId.string)
       if (neighbour) {
-        console.log('Jim addHex', neighbour)
-        addHex(neighbour)
-        dispatchCellsAction({ type: 'addHex', hex: neighbour })
+        dispatchCellsAction({ type: 'addHex', hex: neighbour, extra: {
+          remote: true
+        } })
       }
       dispatchListenersAction({
         type: 'updatePeer',

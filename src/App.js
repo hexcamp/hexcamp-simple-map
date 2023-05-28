@@ -25,16 +25,8 @@ const router = (homeLinkCounter, setHomeLinkCounter) =>
           <nav>
             <StyledList>
               <StyledItem>
-                <NavLink
-                  to='/'
-                  onClick={() => setHomeLinkCounter(homeLinkCounter + 1)}
-                >
-                  Home
-                </NavLink>
-              </StyledItem>
-              <StyledItem>
-                <NavLink to='/edit'>Edit</NavLink>
-              </StyledItem>
+                <b>WebRTC Hex Swarm</b>
+                </StyledItem>
             </StyledList>
           </nav>
           <>
@@ -45,10 +37,6 @@ const router = (homeLinkCounter, setHomeLinkCounter) =>
       children: [
         {
           path: '/',
-          element: <MVTExample homeLinkCounter={homeLinkCounter} />
-        },
-        {
-          path: 'edit',
           element: <MVTExample />
         }
       ]
