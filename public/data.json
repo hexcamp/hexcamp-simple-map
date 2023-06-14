@@ -16,11 +16,11 @@
   },
   "solid": [
     {
-      "hex": "8c28d1a1e6da7ff",
+      "hex": "8c28d1a1e6da5ff",
       "count": 1.446159084497559,
       "colorIndex": 2,
       "type": "helia",
-      "label": "Stamen"
+      "label": "Collector"
     }
   ]
 }
