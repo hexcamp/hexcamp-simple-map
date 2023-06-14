@@ -13,7 +13,7 @@ import cellsReducer from './cells-reducer'
 import listenersReducer from './listeners-reducer'
 
 export default function H3HexagonMVT ({ homeLinkCounter }) {
-  const [resolution, setResolution] = useState(7)
+  const [resolution, setResolution] = useState(12)
 
   const [cells, dispatchCellsAction] = useReducer(cellsReducer, {})
 

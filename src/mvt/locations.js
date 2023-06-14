@@ -1,8 +1,8 @@
 const locations = {
   yyj: {
-    latitude: 48.453291132098585,
-    longitude: -123.39719944905336,
-    zoom: 9.858460441409115,
+    latitude: 48.43437929067003,
+    longitude: -123.40704105298026,
+    zoom: 16.6325674646782,
     pitch: 0,
     bearing: 0
   },

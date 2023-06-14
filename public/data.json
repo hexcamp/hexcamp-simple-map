@@ -1,21 +1,26 @@
 {
   "viewState": {
-    "latitude": 48.457518769136485,
-    "longitude": -123.40784847252989,
-    "zoom": 17.014633278264917,
-    "pitch": 0,
+    "width": 928,
+    "height": 854,
+    "latitude": 48.43437929067006,
+    "longitude": -123.40704105298026,
+    "zoom": 16.6325674646782,
     "bearing": 0,
+    "pitch": 0,
+    "altitude": 1.5,
     "maxZoom": 20,
     "minZoom": 1,
-    "width": 850,
-    "height": 967,
-    "altitude": 1.5,
     "maxPitch": 60,
     "minPitch": 0,
     "transitionDuration": 0
   },
   "solid": [
-  ],
-  "clear": [],
-  "dark": []
+    {
+      "hex": "8c28d1a1e6da7ff",
+      "count": 1.446159084497559,
+      "colorIndex": 2,
+      "type": "helia",
+      "label": "Stamen"
+    }
+  ]
 }

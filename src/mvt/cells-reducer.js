@@ -5,10 +5,14 @@ export default function cellsReducer (cells, action) {
   const { type, data, cell, hex, extra } = action
   switch (type) {
     case 'initData':
+      const cellsIndex = {}
+      for (const cell of data) {
+        cellsIndex[cell.hex] = cell
+      }
       return {
         data,
         nextColor: 0,
-        index: {}
+        index: cellsIndex
       }
     case 'addCell':
       return addCell(cell)
