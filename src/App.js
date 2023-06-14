@@ -25,7 +25,7 @@ const router = (homeLinkCounter, setHomeLinkCounter) =>
           <nav>
             <StyledList>
               <StyledItem>
-                <b>WebRTC Hex Swarm</b>
+                <b>WebRTC Helia Stamen</b>
                 </StyledItem>
             </StyledList>
           </nav>
