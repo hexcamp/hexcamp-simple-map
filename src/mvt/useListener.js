@@ -2,6 +2,9 @@ import { createLibp2p } from 'libp2p'
 import { webRTCStar } from '@libp2p/webrtc-star'
 import { noise } from '@chainsafe/libp2p-noise'
 import { mplex } from '@libp2p/mplex'
+import { MemoryBlockstore } from 'blockstore-core'
+import { MemoryDatastore } from 'datastore-core'
+import { createHelia } from 'helia'
 
 export default function useListener (
   peerId,
@@ -125,5 +128,25 @@ async function createListener (
   await node.start()
 
   dispatchListenersAction({ type: 'addLibp2pNode', peerId, node })
-  log('Created node')
+  log('Created libp2p node')
+
+  const heliaNode = await createHeliaNode(node)
+  console.log('Jim helia node', heliaNode)
+}
+
+async function createHeliaNode (libp2p) {
+
+  // the blockstore is where we store the blocks that make up files
+  const blockstore = new MemoryBlockstore()
+
+  // application-specific data lives in the datastore
+  const datastore = new MemoryDatastore()
+
+  const heliaNode = await createHelia({
+    datastore,
+    blockstore,
+    libp2p
+  })
+
+  return heliaNode
 }
