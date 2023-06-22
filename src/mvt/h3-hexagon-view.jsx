@@ -21,8 +21,10 @@ import IconClusterLayer from './icon-cluster-layer'
 // Set your mapbox token here
 // const MAPBOX_TOKEN = localStorage.getItem('mapbox_token')
 const MAPBOX_TOKEN = tokens.mapbox
-const iconMapping = process.env.PUBLIC_URL + '/location-icon-mapping.json'
-const iconAtlas = process.env.PUBLIC_URL + '/location-icon-atlas.png'
+// const iconMapping = process.env.PUBLIC_URL + '/location-icon-mapping.json'
+// const iconAtlas = process.env.PUBLIC_URL + '/location-icon-atlas.png'
+const iconMapping = '/public/location-icon-mapping.json'
+const iconAtlas = '/public/location-icon-atlas.png'
 
 const ambientLight = new AmbientLight({
   color: [255, 255, 255],

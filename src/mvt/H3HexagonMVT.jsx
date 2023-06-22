@@ -74,7 +74,7 @@ export default function H3HexagonMVT ({ homeLinkCounter }) {
   const [listeners, dispatchListenersAction] = useReducer(listenersReducer, {})
   useEffect(() => {
     async function fetchData () {
-      const response = await fetch(process.env.PUBLIC_URL + '/data.json')
+      const response = await fetch('/public/data.json')
       const data = await response.json()
       dispatchCellsAction({ type: 'initData', data: data.solid })
       setViewState(data.viewState)
