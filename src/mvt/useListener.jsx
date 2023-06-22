@@ -1,3 +1,4 @@
+/*
 import { createLibp2p } from 'libp2p'
 import { webRTCStar } from '@libp2p/webrtc-star'
 import { noise } from '@chainsafe/libp2p-noise'
@@ -5,6 +6,7 @@ import { mplex } from '@libp2p/mplex'
 import { MemoryBlockstore } from 'blockstore-core'
 import { MemoryDatastore } from 'datastore-core'
 import { createHelia } from 'helia'
+*/
 
 export default function useListener (
   peerId,
@@ -47,6 +49,7 @@ async function createListener (
   log,
   neighbours
 ) {
+  return
   const star = webRTCStar()
   const node = await createLibp2p({
     peerId,
