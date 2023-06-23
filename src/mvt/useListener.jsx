@@ -5,6 +5,7 @@ import { mplex } from '@libp2p/mplex'
 import { MemoryBlockstore } from 'blockstore-core'
 import { MemoryDatastore } from 'datastore-core'
 import { createHelia } from 'helia'
+import { unixfs } from '@helia/unixfs'
 
 export default function useListener (
   peerId,
@@ -143,14 +144,8 @@ async function createListener (
   dispatchListenersAction({ type: 'addLibp2pNode', peerId, node })
   log('Created libp2p node')
 
-  /*
   const heliaNode = await createHeliaNode(node)
   console.log('Jim helia node', heliaNode)
-  */
-  /*
-  const heliaNode = await createHeliaNode()
-  console.log('Jim helia node', heliaNode)
-  */
 }
 
 async function createHeliaNode (libp2p) {
@@ -161,11 +156,29 @@ async function createHeliaNode (libp2p) {
   // application-specific data lives in the datastore
   const datastore = new MemoryDatastore()
 
-  const heliaNode = await createHelia({
+  const helia = await createHelia({
     datastore,
     blockstore,
-    // libp2p
+    libp2p
   })
 
-  return heliaNode
+  const fs = unixfs(helia)
+
+  const encoder = new TextEncoder()
+
+  const text = "Hello from Helia!"
+
+  try {
+    const cid = await fs.addBytes(
+      encoder.encode(text),
+      helia.blockstore
+    )
+    console.log('Added file:', cid.toString())
+  } catch (e) {
+    console.error(e)
+  }
+
+  // CID: bafkreih24rri3mto2pqfduo57vkuhymckmam3rlfd2plvrirhmp6o5x6mq
+
+  return helia
 }
