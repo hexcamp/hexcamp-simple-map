@@ -76,12 +76,25 @@ async function createListener (
     }
   })
 
-  node.addEventListener('peer:discovery', evt => {
+  node.addEventListener('peer:discovery', async evt => {
     const remotePeerId = evt?.detail?.id
     if (remotePeerId?.string) {
       // log(`Found peer ${remotePeerId.string}`)
       console.log('Jim peer:discovery', peerId.string, remotePeerId.string)
       dispatchListenersAction({ type: 'addPeer', peerId, remotePeerId })
+      try {
+        console.log('Dialing', remotePeerId.string)
+        const conn = await node.dial(remotePeerId)
+        console.log('Jim connected', conn)
+        const neighbour = neighbours.get(remotePeerId.string)
+        if (neighbour) {
+          dispatchCellsAction({ type: 'addHex', hex: neighbour, extra: {
+            remote: true
+          } })
+        }
+      } catch (e) {
+        console.log('Dial Exception', e)
+      }
     }
   })
 

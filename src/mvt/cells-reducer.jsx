@@ -26,8 +26,10 @@ export default function cellsReducer (cells, action) {
 
   function addCell (newCell) {
     const nextCells = produce(cells, draftCells => {
-      draftCells.data.push(newCell)
-      draftCells.index[newCell.hex] = newCell
+      if (!draftCells.index[newCell.hex]) {
+        draftCells.data.push(newCell)
+        draftCells.index[newCell.hex] = newCell
+      }
     })
     return nextCells
   }
