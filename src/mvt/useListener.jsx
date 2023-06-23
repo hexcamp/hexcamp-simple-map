@@ -143,14 +143,9 @@ async function createListener (
   dispatchListenersAction({ type: 'addLibp2pNode', peerId, node })
   log('Created libp2p node')
 
-  /*
-  const heliaNode = await createHeliaNode(node)
-  console.log('Jim helia node', heliaNode)
-  */
-  /*
-  const heliaNode = await createHeliaNode()
-  console.log('Jim helia node', heliaNode)
-  */
+  const helia = await createHeliaNode(node)
+  console.log('Jim helia node', helia)
+  dispatchListenersAction({ type: 'addHeliaNode', peerId, helia })
 }
 
 async function createHeliaNode (libp2p) {
@@ -161,11 +156,11 @@ async function createHeliaNode (libp2p) {
   // application-specific data lives in the datastore
   const datastore = new MemoryDatastore()
 
-  const heliaNode = await createHelia({
+  const helia = await createHelia({
     datastore,
     blockstore,
-    // libp2p
+    libp2p
   })
 
-  return heliaNode
+  return helia
 }

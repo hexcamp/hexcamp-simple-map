@@ -38,6 +38,11 @@ export default function WebRTCPanel ({
     addHex
   )
 
+  function download () {
+    console.log("Jim download")
+    dispatchListenersAction({ type: 'download', peerId })
+  }
+
   if (!listener) {
     return (
       <div>
@@ -50,6 +55,8 @@ export default function WebRTCPanel ({
   const { peers, logs } = listener
   return (
     <div>
+      <h3>Download</h3>
+      <button onClick={download}>Download demo text</button>
       <h3>Peers</h3>
       <ul>
         {Object.keys(peers).map(remotePeerId => {
