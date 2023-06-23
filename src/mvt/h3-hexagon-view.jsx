@@ -23,8 +23,8 @@ import IconClusterLayer from './icon-cluster-layer'
 const MAPBOX_TOKEN = tokens.mapbox
 // const iconMapping = process.env.PUBLIC_URL + '/location-icon-mapping.json'
 // const iconAtlas = process.env.PUBLIC_URL + '/location-icon-atlas.png'
-const iconMapping = '/public/location-icon-mapping.json'
-const iconAtlas = '/public/location-icon-atlas.png'
+const iconMapping = '/location-icon-mapping.json'
+const iconAtlas = '/location-icon-atlas.png'
 
 const ambientLight = new AmbientLight({
   color: [255, 255, 255],
