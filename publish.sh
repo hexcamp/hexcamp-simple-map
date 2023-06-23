@@ -9,7 +9,7 @@ NAME=$PREFIX-$HEX
 mkdir -p tmp
 
 npm run build
-DIR=build
+DIR=dist
 
 echo Adding to IPFS...
 (
