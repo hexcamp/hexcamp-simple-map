@@ -19,7 +19,7 @@ const secretHex =
   '02998949f060111889810320f8ff4f57b58734c187896ecf4daa44baeba9553f'
 
 export default function H3HexagonMVT ({ homeLinkCounter }) {
-  const [resolution, setResolution] = useState(13)
+  const [resolution, setResolution] = useState(11)
   const [dataSolid, setDataSolid] = useState([])
   const [dataIndex, setDataIndex] = useState(new Map())
   const [nextColor, setNextColor] = useState(0)
