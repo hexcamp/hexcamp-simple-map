@@ -1,4 +1,5 @@
 import { createLibp2p } from 'libp2p'
+import { protocols } from '@multiformats/multiaddr'
 
 import { circuitRelayTransport } from 'libp2p/circuit-relay'
 import { webRTC } from '@libp2p/webrtc'
@@ -11,10 +12,17 @@ import { mplex } from '@libp2p/mplex'
 import { identifyService } from 'libp2p/identify'
 import { pingService } from 'libp2p/ping'
 
+import { pipe } from 'it-pipe'
+import { pushable } from 'it-pushable'
+import { toString } from 'uint8arrays'
+
 import { MemoryBlockstore } from 'blockstore-core'
 import { MemoryDatastore } from 'datastore-core'
 import { createHelia } from 'helia'
 import { unixfs } from '@helia/unixfs'
+
+const WEBRTC_CODE = protocols('webrtc').code
+const clean = line => line.replaceAll('\n', '')
 
 export default function useListener (
   peerId,
@@ -57,6 +65,7 @@ async function createListener (
   log,
   neighbours
 ) {
+  const sender = pushable()
   const node = await createLibp2p({
     peerId,
     addresses: {
@@ -85,11 +94,14 @@ async function createListener (
           console.log('Match: WebRTC relay')
           return false
         }
+        return false
+        /*
         const neighbourHexes = await neighbours
         console.log('Neighbours', neighbourHexes)
         const isNeighbour = neighbourHexes.has(incomingPeerId.string)
         console.log('Is neighbour?', isNeighbour)
         return !isNeighbour
+        */
       }
     },
     services: {
@@ -162,6 +174,48 @@ async function createListener (
     }
   })
 
+  // handle the echo protocol
+  await node.handle('/echo/1.0.0', ({ stream }) => {
+    pipe(
+      stream,
+      async function* (source) {
+        for await (const buf of source) {
+          const incoming = toString(buf.subarray())
+          log(`Received message '${clean(incoming)}'`)
+          yield buf
+        }
+      },
+      stream
+    )
+  })
+
+  node.addEventListener('self:peer:update', event => {
+    console.log('Jim self:peer:update', event)
+    // Update multiaddrs list
+    const multiaddrs = node.getMultiaddrs().forEach(ma => {
+      log(`self:peer:update ma ${ma.toString()}`)
+    })
+  })
+
+  node.addEventListener('connection:open', event => {
+    const connection = event.detail
+    console.log('Jim connection:open', connection.remoteAddr.toString())
+    if (isWebrtc(connection.remoteAddr)) {
+      async function run () {
+        console.log('Jim run')
+        const outgoing_stream = await connection.newStream(['/echo/1.0.0'])
+        pipe(sender, outgoing_stream, async src => {
+          // Sending messages to remote
+          for await (const buf of src) {
+            const response = toString(buf.subarray())
+            log(`Received echo reply '${clean(response)}'`)
+          }
+        })
+      }
+      run()
+    }
+  })
+
   await node.start()
 
   console.log('Jim node', node)
@@ -177,6 +231,11 @@ async function createListener (
   const heliaNode = await createHeliaNode(node)
   console.log('Jim helia node', heliaNode)
 }
+
+const isWebrtc = ma => {
+  return ma.protoCodes().includes(WEBRTC_CODE)
+}
+
 
 async function createHeliaNode (libp2p) {
 
