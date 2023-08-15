@@ -35,6 +35,9 @@ const router = (homeLinkCounter, setHomeLinkCounter) =>
               <StyledItem>
                 <NavLink to='/edit'>Edit</NavLink>
               </StyledItem>
+              <StyledItem>
+                <a href="https://github.com/hexcamp/hexcamp-simple-map/tree/demos">GitHub</a>
+              </StyledItem>
             </StyledList>
           </nav>
           <>
